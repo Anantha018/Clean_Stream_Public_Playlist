@@ -17,7 +17,22 @@ SECRET_KEY = 'django-insecure-=55+$ltj$^_uj%latl2m*(ny!@m9v!4m1hdvryngeunp*yq-g1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*','https://cleanstreampublicplaylist-production.up.railway.app/']
+# Security and allowed hosts
+DEBUG = False
+ALLOWED_HOSTS = ['*', 'cleanstreampublicplaylist-production.up.railway.app']
+
+# CORS settings
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOWED_ORIGINS = [
+    'https://cleanstreampublicplaylist-production.up.railway.app',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'https://cleanstreampublicplaylist-production.up.railway.app',
+]
+
+# CSRF cookie security
+CSRF_COOKIE_SECURE = True  # Ensure HTTPS is enabled in production
 
 
 # Application definition
@@ -42,19 +57,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-CSRF_COOKIE_SECURE = True  
-
-CORS_ALLOW_CREDENTIALS = True  # To allow cookies (like CSRF and session) to be sent
-CORS_ORIGIN_ALLOW_ALL = False  # Do not allow all origins in production, restrict to known origins
-
-CORS_ALLOWED_ORIGINS = [
-    'https://cleanstreampublicplaylist-production.up.railway.app',  # Your production domain
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://cleanstreampublicplaylist-production.up.railway.app',  # Trusted origin for CSRF protection
 ]
 
 
