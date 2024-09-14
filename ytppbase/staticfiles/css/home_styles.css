@@ -1,0 +1,224 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1e1e1e; /* Dark background color */
+    color: #ddd; /* Light text color */
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Main container */
+.container {
+    max-width: 800px; /* Adjust max-width as needed */
+    width: 100%;
+    padding: 20px;
+    background-color: #2e2e2e; /* Dark background color */
+    color: #fff; /* Light text color */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align contents horizontally */
+}
+
+/* Heading 1 styling */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Image container */
+.image-container {
+    width: 100%; /* Take full width of container */
+    text-align: center; /* Center align contents */
+    margin-bottom: 20px; /* Spacing below the image */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align items horizontally */
+}
+
+.image-container img {
+    max-width: 100%; /* Ensure image stays within its container */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Rounded corners for image */
+    margin: 0 auto; /* Center the image horizontally */
+}
+
+.image-caption {
+    margin-top: 10px;
+    color: #ddd; /* Light text color */
+    font-weight: bold;
+}
+
+/* Form container styling */
+.form-container {
+    width: 100%; /* Take full width of container */
+    text-align: center; /* Center align contents */
+}
+
+form {
+    background-color: #333; /* Dark form background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
+    width: 100%; /* Ensure the form spans the entire width */
+    min-height: 340px; /* Adjust minimum height as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff; /* Label color */
+}
+
+form input[type="text"],
+form input[type="submit"] {
+    width: calc(100% - 30px); /* Adjust width to accommodate padding */
+    padding: 15px; /* Increased padding */
+    margin-bottom: 15px; /* Increased margin */
+    border: 1px solid #555; /* Darker border */
+    border-radius: 4px;
+    background-color: #444; /* Dark input background */
+    color: #fff; /* Light text color */
+    font-size: 18px; /* Increased font size */
+    font-weight: bold; /* Make text bold */
+}
+
+form input[type="submit"] {
+    background-color: #007bff; /* Blue submit button */
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    font-size: 18px; /* Match font size with text input */
+    font-weight: bold; /* Make text bold */
+}
+
+/* Error message styling */
+.error-message {
+    color: #dc3545; /* Red error message */
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Playlists styling */
+h2 {
+    text-align: center;
+    margin-top: 30px;
+    color: #fff; /* Light text color */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+ul li a {
+    display: block;
+    padding: 10px;
+    background-color: #555; /* Darker background for links */
+    color: #fff; /* Light text color */
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+ul li a:hover {
+    background-color: #007bff; /* Darker blue on hover */
+    text-decoration: none;
+    color: #fff; /* Light text color */
+}
+
+.loading {
+    display: none;
+    margin-top: 10px;
+}
+
+.loading.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-circle {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-reasons {
+    list-style-type: none;
+    padding: 0;
+}
+
+.error-reasons li {
+    margin-bottom: 5px;
+}
+
+.error-reasons a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px; /* Adjust font size for links */
+}
+
+.error-reasons a:hover {
+    text-decoration: underline;
+}
+
+/* Media queries for mobile */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .image-container {
+        width: 50%;
+        margin-bottom: 15px;
+    }
+
+    .form-container form {
+        padding: 50px;
+    }
+
+    form input[type="text"],
+    form input[type="submit"] {
+        width: calc(100% - 0px);
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    ul li a {
+        padding: 8px;
+        overflow-y: auto;
+    }
+
+    .loading-circle {
+        width: 20px;
+        height: 20px;
+    }
+}
