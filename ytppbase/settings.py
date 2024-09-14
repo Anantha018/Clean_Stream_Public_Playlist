@@ -44,7 +44,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True  
+
+CORS_ALLOW_CREDENTIALS = True  # To allow cookies to be sent
+CORS_ORIGIN_ALLOW_ALL = False  # Ensure this is properly set for production
+
+CORS_ALLOWED_ORIGINS = [
+    'https://cleanstreampublicplaylist-production.up.railway.app/'
+]
+
+CSRF_TRUSTED_ORIGINS = ['https://cleanstreampublicplaylist-production.up.railway.app/']  # Adjust according to your environment
+
 
 ROOT_URLCONF = 'ytppbase.urls'
 
