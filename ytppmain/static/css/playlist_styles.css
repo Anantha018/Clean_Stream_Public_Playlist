@@ -1,0 +1,277 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #2e2e2e;
+    color: #ddd;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main container */
+.container {
+    max-width: 800px;
+    margin: 80px auto 200px auto;
+    background-color: #2e2e2e;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 200px;
+}
+
+h1 {
+    color: #ddd;
+    margin-top: 0;
+}
+
+.thumbnail {
+    width: 90px;
+    height: auto;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+/* Search container styling */
+.search-container {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    background-color: #2e2e2e;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+
+#searchInput {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 20px;
+    background-color: #444;
+    color: #fff;
+    outline: none;
+    box-sizing: border-box;
+    max-width: 800px;
+}
+
+.search-btn {
+    width: 80px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 20px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Reset default browser list styles */
+ul, ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul.video-list {
+    padding: 0;
+}
+
+.video-item {
+    margin-bottom: 50px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.video-info {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.video-details {
+    flex: 1;
+}
+
+/* Audio player styling */
+.audioPlayer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #2e2e2e;
+    color: #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    opacity: 1;
+}
+
+.audio-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.audio-controls button {
+    background: none;
+    border: none;
+    color: #ddd;
+    font-size: 24px;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.audio-controls button:hover {
+    color: #007bff;
+}
+
+audio {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.play-audio {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.play-audio:hover {
+    background-color: #0056b3;
+}
+
+.play-audio.playing {
+    background-color: #28a745;
+}
+
+.play-audio.playing:hover {
+    background-color: #1e7e34;
+}
+
+.play-audio .audio-icon {
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+.play-audio .audio-icon.playing {
+    color: #28a745;
+}
+
+/* Highlight active loop button */
+.loop-btn.active {
+    color: #28a745;
+}
+
+/* Simplified style for the note */
+.note {
+    font-size: 14px;
+    margin-top: 25px;
+    margin-bottom: 60px;
+}
+
+/* Responsive styling */
+@media (max-width: 600px) {
+    .container {
+        margin: 115px 0px 200px auto;
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    .search-container {
+        width: calc(100% - 1px);
+        left: -2px;
+        transform: none;
+        border-radius: 0;
+        padding: 36px 33px
+    }
+
+    #searchInput {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .search-btn {
+        width: 60px;
+        padding: 11px;
+    }
+
+    .thumbnail {
+        width: 80px;
+        margin-right: 5px;
+    }
+
+    .video-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .video-info {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin: 20px 0px;
+    }
+
+    .audioPlayer {
+        left:-3px;
+        padding: 10px;
+    }
+
+    .audio-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        margin-left: 45px;
+    }
+
+    .audioPlayer h2 {
+        font-size: 14px;
+    }
+
+    .audio-controls button {
+        font-size: 20px;
+    }
+
+    .play-audio {
+        margin-top: 10px;
+        padding: 8px 18px;
+        font-size: 6px;
+    }
+
+    .note {
+        font-size: 14px;
+    }
+}

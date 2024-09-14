@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Tube Music</title>
+
+    <!-- Link to CSS file using Django's static tag -->
+    <link rel="stylesheet" href="{% static 'css/home_styles.css' %}">
+    
+    <!-- Link to JS file using Django's static tag -->
+    <script src="{% static 'js/home_script.js' %}"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Playlist Finder</h1>
+
+        <div class="image-container">
+            <div class="image-caption">Location of a channel's username</div> <br>
+
+            <!-- Link to image file using Django's static tag -->
+            <img src="{% static 'images/ChannelBannerHighlight-copy2.png' %}" alt="Sample Image">
+            
+            <div class="image-caption">The bot will retrieve only publicly available playlists.</div>
+        </div>
+
+        <div class="form-container">
+            <form action="/" method="post" onsubmit="disableButton()">
+                {% csrf_token %}
+                <label for="username">Enter Channel Username:</label><br>
+                <input type="text" id="username" name="username"><br><br>
+                <input type="submit" id="submitBtn" value="Retrieve All Public Playlists">
+                
+                <div id="loadingMessage" class="loading">
+                    <div class="loading-circle"></div>
+                    <span>Loading...</span>
+                </div>
+            </form>
+        </div>
+
+        {% if error %}
+            <p class="error-message">Error: Username not found. This could be due to one of the following reasons:</p>
+            <ul class="error-message">
+                <li>Ensure you do not include "@" in the username.</li>
+                <li>Only publicly available playlists will be displayed.</li>
+                <li><a href="https://support.google.com/youtube/answer/3250431?hl=en">Guide to find the username of a YouTube channel</a></li>
+                <li><a href="https://support.google.com/youtube/answer/3127309?hl=en-GB">Learn how to Change your playlists to public</a></li>
+            </ul>        
+        {% endif %}
+    
+        {% if playlists %}
+            <h2>{{ username }}'s Playlists</h2> <br>
+            <ul>
+                {% for playlist in playlists %}
+                <li>
+                    <a href="{% url 'playlist' playlist_id=playlist.id %}">{{ playlist.title }}</a>    
+                </li>                
+                {% endfor %}
+            </ul>
+            <script>
+                enableButton(); // Enable the submit button after playlists are rendered
+            </script>
+        {% endif %}
+    </div> 
+</body>
+</html>
