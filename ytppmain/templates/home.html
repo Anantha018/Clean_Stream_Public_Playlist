@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Tube Music</title>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Link to CSS file using Django's static tag -->
     <link rel="stylesheet" href="{% static 'css/home_styles.css' %}">
     
@@ -14,15 +14,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>Playlist Finder</h1>
+        <h1> <i class="fa-solid fa-list-check" style="color: #46f17c;"></i>&nbsp;Playlist Finder</h1>
 
         <div class="image-container">
-            <div class="image-caption">Location of a channel's username</div> <br>
+            {% comment %} <div class="image-caption">Location of a channel's username</div> <br>
 
             <!-- Link to image file using Django's static tag -->
-            <img src="{% static 'images/ChannelBannerHighlight-copy2.png' %}" alt="Sample Image">
+            <img src="{% static 'images/ChannelBannerHighlight-copy2.png' %}" alt="Sample Image"> {% endcomment %}
             
-            <div class="image-caption">The bot will retrieve only publicly available playlists.</div>
+            <div class="image-caption"><i class="fa-solid fa-robot" style="color: #f75f5e;"></i>&nbsp;The bot will retrieve only publicly available playlists.</div>
         </div>
 
         <div class="form-container">
@@ -30,7 +30,10 @@
                 {% csrf_token %}
                 <label for="username">Enter Channel Username:</label><br>
                 <input type="text" id="username" name="username"><br><br>
-                <input type="submit" id="submitBtn" value="Retrieve All Public Playlists">
+                <button type="submit" id="submitBtn">
+                    <i class="fa-solid fa-rotate"></i>&nbsp; Retrieve
+                </button>
+                
                 
                 <div id="loadingMessage" class="loading">
                     <div class="loading-circle"></div>
@@ -50,11 +53,11 @@
         {% endif %}
     
         {% if playlists %}
-            <h2>{{ username }}'s Playlists</h2> <br>
+            <h2><i class="fa-solid fa-user" style="color: #efb943;"></i>&nbsp;{{ username }}'s Playlists</h2> <br>
             <ul>
                 {% for playlist in playlists %}
                 <li>
-                    <a href="{% url 'playlist' playlist_id=playlist.id %}">{{ playlist.title }}</a>    
+                    <a href="{% url 'playlist' playlist_id=playlist.id %}"><i class="fas fa-list" style="color: #49d2bb;"></i>&nbsp;{{ playlist.title }}</a>    
                 </li>                
                 {% endfor %}
             </ul>

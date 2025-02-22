@@ -20,11 +20,8 @@ body {
 .container {
     max-width: 800px; /* Adjust max-width as needed */
     width: 100%;
-    padding: 20px;
-    background-color: #2e2e2e; /* Dark background color */
     color: #fff; /* Light text color */
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
     display: flex;
     flex-direction: column;
     align-items: center; /* Center align contents horizontally */
@@ -54,9 +51,9 @@ h1 {
 }
 
 .image-caption {
-    margin-top: 10px;
+    margin-top: 70px;
     color: #ddd; /* Light text color */
-    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 /* Form container styling */
@@ -75,6 +72,7 @@ form {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 form label {
@@ -97,13 +95,16 @@ form input[type="submit"] {
     font-weight: bold; /* Make text bold */
 }
 
-form input[type="submit"] {
+#submitBtn {
     background-color: #007bff; /* Blue submit button */
     color: #fff;
     cursor: pointer;
     border: none;
     font-size: 18px; /* Match font size with text input */
     font-weight: bold; /* Make text bold */
+    padding: 15px; /* Increased padding */
+    margin-bottom: 15px;
+    border-radius: 10px;
 }
 
 /* Error message styling */
@@ -192,9 +193,6 @@ ul li a:hover {
 
 /* Media queries for mobile */
 @media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
 
     .image-container {
         width: 50%;
