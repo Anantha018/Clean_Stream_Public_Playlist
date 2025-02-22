@@ -10,6 +10,8 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from yt_dlp import YoutubeDL
 
+# To update "pip install --user -U yt-dlp" in the terminal
+
 DEVELOPER_KEY = 'AIzaSyD7KgygEbYsJgDiPKLca2TmFffoJuqdScY'
 YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
