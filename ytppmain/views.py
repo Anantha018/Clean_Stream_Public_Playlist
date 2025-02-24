@@ -50,7 +50,7 @@ def playlist(request, playlist_id):  # Accept playlist_id as a parameter
 def audio(request, video_id):
     try:
         yt_url = f'https://www.youtube.com/watch?v={video_id}'
-        ydl_opts = {'format': 'bestaudio[ext=m4a]/best', 'quiet': True, 'noplaylist': True}
+        ydl_opts = {'format': 'bestaudio[ext=m4a]/bestaudio', 'quiet': True, 'noplaylist': True}
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(yt_url, download=False)
             audio_url = info['url']
