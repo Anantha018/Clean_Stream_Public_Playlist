@@ -53,6 +53,10 @@ def audio(request, video_id):
     try:
         yt_url = f'https://www.youtube.com/watch?v={video_id}'
         ydl_opts = {'format': 'bestaudio[ext=m4a]/bestaudio', 'quiet': True, 'noplaylist': True}
+        ydl_opts['http_headers'] = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36'
+        }
+
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(yt_url, download=False)
             audio_url = info['url']
@@ -87,7 +91,7 @@ def get_playlist_info(channel_name):
 @csrf_exempt
 def get_playlist_title(playlist_id):
     base_url = f'https://www.youtube.com/playlist?list={playlist_id}'
-    headers = {'User-Agent': 'Mozilla/5.0'}
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"}
     response = requests.get(base_url, headers=headers)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
