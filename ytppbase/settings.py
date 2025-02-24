@@ -34,6 +34,7 @@ CSRF_TRUSTED_ORIGINS = [
 # CSRF cookie security
 CSRF_COOKIE_SECURE = True  # Ensure HTTPS is enabled in production
 
+CSRF_FAILURE_VIEW = 'ytppmain.views.csrf_failure'
 
 # Application definition
 
@@ -50,13 +51,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',  
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 

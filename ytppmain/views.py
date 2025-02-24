@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from yt_dlp import YoutubeDL
+from django.views.decorators.csrf import csrf_exempt
 
 # To update "pip install --user -U yt-dlp" in the terminal
 
@@ -58,7 +59,7 @@ def audio(request, video_id):
     except Exception as e:
         return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
 
-# Helper functions (same as Flask)
+@csrf_exempt
 def get_playlist_info(channel_name):
     base_url = f'https://www.youtube.com/@{channel_name}/playlists'
     headers = {'User-Agent': 'Mozilla/5.0'}
@@ -128,3 +129,7 @@ def fetch_playlist_title(playlist_id):
     request = youtube.playlists().list(part='snippet', id=playlist_id)
     response = request.execute()
     return response['items'][0]['snippet']['title']
+
+
+def csrf_failure(request, reason=""):
+    return render(request, 'csrf_error.html')
