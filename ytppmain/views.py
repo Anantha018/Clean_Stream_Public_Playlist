@@ -52,15 +52,20 @@ def playlist(request, playlist_id):  # Accept playlist_id as a parameter
 def audio(request, video_id):
     try:
         yt_url = f'https://www.youtube.com/watch?v={video_id}'
-        ydl_opts = {'format': 'bestaudio[ext=m4a]/bestaudio', 'quiet': True, 'noplaylist': True}
-        ydl_opts['http_headers'] = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36'
+        ydl_opts = {
+            'format': 'bestaudio[ext=m4a]/bestaudio',
+            'quiet': True,
+            'noplaylist': True,
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36'
+            }
         }
 
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(yt_url, download=False)
             audio_url = info['url']
             return JsonResponse({'audio_url': audio_url})
+        
     except Exception as e:
         return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
 
