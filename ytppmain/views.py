@@ -48,7 +48,6 @@ def playlist(request, playlist_id):  # Accept playlist_id as a parameter
         return render(request, 'home.html', {'error': f"An error occurred: {e}"})
 
 # Audio extraction View
-@csrf_exempt
 def audio(request, video_id):
     try:
         yt_url = f'https://www.youtube.com/watch?v={video_id}'
@@ -56,10 +55,15 @@ def audio(request, video_id):
             'format': 'bestaudio[ext=m4a]/bestaudio',
             'quiet': True,
             'noplaylist': True,
-            'http_headers': {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36'
-            }
         }
+        
+        ydl_opts['http_headers'] = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
+            'Referer': 'https://www.youtube.com/',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+        }
+
 
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(yt_url, download=False)
