@@ -19,7 +19,7 @@ DEBUG = False
 
 # Security and allowed hosts
 DEBUG = False
-ALLOWED_HOSTS = ['*', 'cleanstreampublicplaylist-production.up.railway.app']
+ALLOWED_HOSTS = ['*', 'cleanstreampublicplaylist.up.railway.app']
 
 # CORS settings
 CORS_ALLOW_CREDENTIALS = True
