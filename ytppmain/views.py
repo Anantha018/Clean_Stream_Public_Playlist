@@ -16,7 +16,7 @@ DEVELOPER_KEY = 'AIzaSyD7KgygEbYsJgDiPKLca2TmFffoJuqdScY'
 YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
 
-# Home View
+@csrf_exempt
 def home(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -31,7 +31,7 @@ def home(request):
     else:
         return render(request, 'home.html', {'username': None, 'playlists': None, 'error': None})
 
-# Playlist View
+@csrf_exempt
 def playlist(request, playlist_id):  # Accept playlist_id as a parameter
     if not playlist_id:
         return render(request, 'home.html', {'error': 'Playlist ID is required.'})
@@ -83,7 +83,8 @@ def get_playlist_info(channel_name):
         return playlists_info
     else:
         raise ValueError("Failed to retrieve playlists.")
-
+    
+@csrf_exempt
 def get_playlist_title(playlist_id):
     base_url = f'https://www.youtube.com/playlist?list={playlist_id}'
     headers = {'User-Agent': 'Mozilla/5.0'}
@@ -103,6 +104,7 @@ def get_playlist_title(playlist_id):
                         return None
     return None
 
+@csrf_exempt
 def fetch_youtube_playlist_items(playlist_id):
     youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
     playlist_items = []
@@ -125,6 +127,7 @@ def fetch_youtube_playlist_items(playlist_id):
 
     return videos
 
+@csrf_exempt
 def fetch_playlist_title(playlist_id):
     youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
     request = youtube.playlists().list(part='snippet', id=playlist_id)
