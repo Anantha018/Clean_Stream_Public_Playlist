@@ -25,10 +25,10 @@ ALLOWED_HOSTS = ['*', 'cleanstreampublicplaylist.up.railway.app']
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = [
-    'https://cleanstreampublicplaylist-production.up.railway.app',
+    'https://cleanstreampublicplaylist.up.railway.app',
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'https://cleanstreampublicplaylist-production.up.railway.app',
+    'https://cleanstreampublicplaylist.up.railway.app',
 ]
 
 # CSRF cookie security
