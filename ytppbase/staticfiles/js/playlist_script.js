@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.audio_url) {
+                    document.title = title;
                     const audioPlayer = document.createElement('div');
                     audioPlayer.classList.add('audioPlayer', 'active');
                     audioPlayer.innerHTML = `
@@ -113,21 +114,28 @@ document.addEventListener('DOMContentLoaded', function () {
                             playNext(); // Play the next song in the playlist
                         }
                     });
+                    
                     const prevButton = audioPlayer.querySelector('.prev-btn');
                     prevButton.addEventListener('click', playPrevious);
+                    
                     const playPauseButton = audioPlayer.querySelector('.play-btn');
                     playPauseButton.addEventListener('click', togglePlayPause);
+                    
                     const nextButton = audioPlayer.querySelector('.next-btn');
                     nextButton.addEventListener('click', playNext);
+                    
                     const loopButton = audioPlayer.querySelector('.loop-btn');
                     loopButton.addEventListener('click', toggleLoopSameSong);
+
                     currentAudio.addEventListener('timeupdate', function() {
+                        if (!currentAudio) return; // Prevent error if currentAudio is null
+                    
                         if (currentAudio.paused) {
                             playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
                         } else {
                             playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
                         }
-                    });
+                    });                    
                     // Update playButtons to reflect current playing state
                     playButtons.forEach(btn => btn.classList.remove('playing'));
                     const currentButton = Array.from(playButtons).find(btn => btn.dataset.audioUrl === audioUrl);
@@ -143,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 playNext();
             });
     }
+
     // Function to toggle play/pause
     function togglePlayPause() {
         if (currentAudio.paused || currentAudio.ended) {
@@ -154,40 +163,66 @@ document.addEventListener('DOMContentLoaded', function () {
             currentAudio.pause();
         }
     }
+    
     // Function to play previous song
     function playPrevious() {
-        const currentIndex = Array.from(playButtons).findIndex(button => button.classList.contains('playing'));
+        const titles = Array.from(document.querySelectorAll('.video-title'));
+        const currentIndex = titles.findIndex(title => title.style.color === 'rgb(99, 199, 72)'); // Green color
+    
+        if (currentIndex === -1) {
+            console.error("No currently playing song found.");
+            return;
+        }
+    
         let prevIndex = currentIndex - 1;
         if (prevIndex < 0) {
-            prevIndex = playButtons.length - 1;
+            prevIndex = titles.length - 1; // Loop to last song
         }
-        if (loopSameSong && currentAudio) {
-            currentAudio.currentTime = 0; // Reset audio to beginning
-            currentAudio.play(); // Play the same song again
-        } else {
-            const prevButton = playButtons[prevIndex];
-            prevButton.classList.add('playing');
-            playButtons[currentIndex].classList.remove('playing');
-            playAudio(prevButton.dataset.audioUrl, prevButton.dataset.title);
+    
+        const prevTitle = titles[prevIndex];
+        if (!prevTitle) {
+            console.error("No previous song found.");
+            return;
         }
-    }
+    
+        const audioUrl = prevTitle.getAttribute("data-audio-url");
+        const titleText = prevTitle.getAttribute("data-title");
+    
+        if (audioUrl) {
+            playAudio(audioUrl, titleText);
+        }
+    }    
+
     // Function to play next song
     function playNext() {
-        const currentIndex = Array.from(playButtons).findIndex(button => button.classList.contains('playing'));
-        let nextIndex = currentIndex + 1;
-        if (nextIndex >= playButtons.length) {
-            nextIndex = 0;
+        const titles = Array.from(document.querySelectorAll('.video-title')); // Get all titles
+        const currentIndex = titles.findIndex(title => title.style.color === 'rgb(99, 199, 72)'); // Green color
+
+        if (currentIndex === -1) {
+            console.error("No currently playing song found.");
+            return; // Stop execution if no song is playing
         }
-        if (loopSameSong && currentAudio) {
-            currentAudio.currentTime = 0; // Reset audio to beginning
-            currentAudio.play(); // Play the same song again
-        } else {
-            const nextButton = playButtons[nextIndex];
-            nextButton.classList.add('playing');
-            playButtons[currentIndex].classList.remove('playing');
-            playAudio(nextButton.dataset.audioUrl, nextButton.dataset.title);
+
+        let nextIndex = currentIndex + 1;
+        if (nextIndex >= titles.length) {
+            nextIndex = 0; // Loop back to the first song if at the end
+        }
+
+        const nextTitle = titles[nextIndex];
+        if (!nextTitle) {
+            console.error("No next song found.");
+            return;
+        }
+
+        const audioUrl = nextTitle.getAttribute("data-audio-url");
+        const titleText = nextTitle.getAttribute("data-title");
+
+        if (audioUrl) {
+            playAudio(audioUrl, titleText);
         }
     }
+
+    
     // Function to toggle loopSameSong flag
     function toggleLoopSameSong() {
         loopSameSong = !loopSameSong; // Toggle the flag
