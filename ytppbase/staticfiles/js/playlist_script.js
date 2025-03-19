@@ -3,25 +3,68 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
     let currentAudio = null;
     let loopSameSong = false; // Flag to control looping of the same song
+
+    function triggerFilter() {
+        const searchTerm = searchInput.value.trim().toLowerCase(); //  Get lowercase search term
+        filterPlaylists(searchTerm); //  Call filtering function
+    }
+
+    searchInput.addEventListener('input', triggerFilter); //  Trigger on typing
+    searchInput.addEventListener('click', triggerFilter); //  Trigger on click
+
+    document.querySelectorAll(".video-title").forEach(title => {
+        title.addEventListener("click", function() {
+            const audioUrl = this.getAttribute("data-audio-url");
+            const titleText = this.getAttribute("data-title");
+            playAudio(audioUrl, titleText);
+        });
+    });
+
+    document.querySelectorAll(".thumbnail").forEach(thumbnail => {
+        thumbnail.addEventListener("click", function() {
+            const videoInfo = this.closest(".video-info"); //  Get parent container
+            if (!videoInfo) return;
+    
+            const titleElement = videoInfo.querySelector(".video-title"); //  Find title
+            if (!titleElement) return;
+    
+            const audioUrl = titleElement.getAttribute("data-audio-url");
+            const titleText = titleElement.getAttribute("data-title");
+    
+            if (audioUrl) {
+                playAudio(audioUrl, titleText);
+            } else {
+                // console.error("No audio URL found for this thumbnail.");
+            }
+        });
+    });
+    
+
     // Function to handle filtering of playlist items based on search input
     function filterPlaylists(searchTerm) {
-        playButtons.forEach(button => {
-            const videoTitle = button.dataset.title.toLowerCase();
-            const parentLi = button.closest('li');
-            if (searchTerm === '' || videoTitle.includes(searchTerm)) {
-                parentLi.style.display = 'flex'; // Show matching videos or all if searchTerm is empty
+        const titles = document.querySelectorAll('.video-title'); //  Get all titles
+    
+        titles.forEach(title => {
+            const videoTitle = title.textContent.trim().toLowerCase(); //  Get text
+            const parentLi = title.closest('li'); //  Find the correct <li> element
+    
+            if (videoTitle.includes(searchTerm)) {
+                parentLi.style.display = 'flex';  //  Show matching items
             } else {
-                parentLi.style.display = 'none'; // Hide non-matching videos
+                parentLi.style.display = 'none';  //  Hide non-matching items
             }
         });
     }
-    // Event listener for input in the search field
-    searchInput.addEventListener('input', function () {
-        const searchTerm = searchInput.value.trim().toLowerCase();
-        filterPlaylists(searchTerm);
-    });
+    
+
     // Function to play audio
     function playAudio(audioUrl, title) {
+
+        if (!audioUrl) {
+            console.error("Error: audioUrl is null or undefined");
+            return; // Stop execution if audioUrl is missing
+        }
+
         if (currentAudio) {
             currentAudio.pause();
             currentAudio = null;
@@ -50,6 +93,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     audioPlayerContainer.innerHTML = '';
                     audioPlayerContainer.appendChild(audioPlayer);
                     currentAudio = audioPlayer.querySelector('audio');
+
+                    // Reset color of all titles
+                    document.querySelectorAll('.video-title').forEach(title => {
+                        title.style.color = ''; // Reset to default color
+                    });
+
+                    // Highlight the currently playing title
+                    const currentTitle = document.querySelector(`.video-title[data-audio-url="${audioUrl}"]`);
+                    if (currentTitle) {
+                        currentTitle.style.color = '#63c748'; // Change playing title to green
+                    }
+
                     currentAudio.addEventListener('ended', function() {
                         if (loopSameSong) {
                             currentAudio.currentTime = 0; // Reset audio to beginning

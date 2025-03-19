@@ -19,13 +19,15 @@
     <!-- Search container -->
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="Search song in the playlist...">
-        <button class="search-btn"><i class="fas fa-search"></i></button>
     </div>
 
     <!-- Main content -->
     <div class="container">
-        <h3><i class="fa-solid fa-music" style="color: #B197FC;"></i>&nbsp;{{ playlist_title }} - playlist</h3>
-        <p class="note">Note: Some songs may not be playable due to unavailable audio.</p>
+        <div class="back-button" onclick="window.history.back();">
+            <i class="fa-solid fa-left-long"></i>
+        </div>
+        
+        <h2 class="playlist-title"><i class="fa-solid fa-music" style="color: #B197FC;"></i>&nbsp;&nbsp;{{ playlist_title }}</h2>
         {% if videos %}
             <ul>
                 {% for video in videos %}
@@ -33,13 +35,13 @@
                     <li>
                         <div class="video-info">
                             <img src="{{ video.thumbnail_url }}" alt="Thumbnail" class="thumbnail">
+                        
                             <div class="video-details">
-                                <h4>{{ video.title }}</h4>
-                                <p><a href="#" class="play-audio" data-audio-url="{{ video.audio_url|safe }}" data-title="{{ video.title|safe }}">
-                                    <span class="audio-icon"><i class="fas fa-play"></i></span>
-                                </a></p>
+                                <h4 class="video-title" data-audio-url="{{ video.audio_url|safe }}" data-title="{{ video.title|safe }}">
+                                    {{ video.title|truncatechars:40 }}
+                                </h4>                                
                             </div>
-                        </div>
+                        </div>                        
                     </li>
                     {% endif %}
                 {% endfor %}
@@ -47,6 +49,8 @@
         {% else %}
             <p>No valid videos found for this playlist.</p>
         {% endif %}
+
+        <p class="note"><i class="fa-solid fa-circle-info" style="color: #FFD43B;"></i> Some songs may not be playable due to unavailable audio.</p>
     </div>
     
     <!-- Audio player container -->
