@@ -1,15 +1,13 @@
 asgiref==3.8.1
 beautifulsoup4==4.13.3
+Django==5.1.7
 Brotli==1.1.0
 cachetools==5.5.2
 certifi==2025.1.31
 charset-normalizer==3.4.1
-Django==5.1.6
-django-cors-headers==4.7.0
 dnspython==2.7.0
 ffmpeg==1.4
-google-api-core==2.24.1
-google-api-python-client==2.161.0
+google-api-core
 google-auth==2.38.0
 google-auth-httplib2==0.2.0
 googleapis-common-protos==1.68.0
@@ -36,3 +34,11 @@ urllib3==2.3.0
 websockets==15.0
 whitenoise==6.9.0
 yt-dlp==2025.2.19
+
+# Additional dependencies       
+aiohttp==3.11.6
+asyncio-throttle==0.1.1
+django-cors-headers==4.7.0
+google-api-python-client
+
+
