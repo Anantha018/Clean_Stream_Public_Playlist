@@ -48,6 +48,7 @@ def playlist(request, playlist_id):  # Accept playlist_id as a parameter
         return render(request, 'home.html', {'error': f"An error occurred: {e}"})
 
 # Audio extraction View
+@csrf_exempt
 def audio(request, video_id):
     try:
         yt_url = f'https://www.youtube.com/watch?v={video_id}'
