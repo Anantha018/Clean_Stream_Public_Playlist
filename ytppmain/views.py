@@ -9,6 +9,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from yt_dlp import YoutubeDL
 from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
 
 # To update "pip install --user -U yt-dlp" in the terminal
 
@@ -47,32 +48,63 @@ def playlist(request, playlist_id):  # Accept playlist_id as a parameter
     except HttpError as e:
         return render(request, 'home.html', {'error': f"An error occurred: {e}"})
 
-# Audio extraction View
-@csrf_exempt
-def audio(request, video_id):
+
+CLOUDFLARE_WORKER_URL = "https://ytproxyaudio.sridharindie.workers.dev/?video_id="
+
+def fetch_audio_url(video_id):
+    """Fetches the audio URL from YouTube using yt-dlp."""
+    
+    if cache.get(video_id):  # Check if URL is already cached
+        return cache.get(video_id)
+
+    # 🔹 Step 1: Fetch Video Details from Cloudflare Worker
     try:
-        yt_url = f'https://www.youtube.com/watch?v={video_id}'
-        ydl_opts = {
-            'format': 'bestaudio[ext=m4a]/bestaudio',
-            'quiet': True,
-            'noplaylist': True,
-        }
+        response = requests.get(CLOUDFLARE_WORKER_URL + video_id)
+        if response.status_code != 200:
+            return None
         
-        ydl_opts['http_headers'] = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
-            'Referer': 'https://www.youtube.com/',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
-        }
-
-
-        with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(yt_url, download=False)
-            audio_url = info['url']
-            return JsonResponse({'audio_url': audio_url})
-        
+        video_info = response.json()
+        if "video_info" not in video_info:
+            return None
     except Exception as e:
-        return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
+        return None  # Return None if Cloudflare request fails
+
+    # 🔹 Step 2: Extract Audio URL Using yt-dlp
+    ydl_opts = {
+        'format': 'bestaudio[ext=m4a]/bestaudio',
+        'quiet': True,
+        'noplaylist': True,
+        'retries': 2,
+        'skip_download': True,
+    }
+
+    try:
+        with YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(f'https://www.youtube.com/watch?v={video_id}', download=False)
+            audio_url = info.get('url')
+            if audio_url:
+                cache.set(video_id, audio_url, timeout=600)  # Cache for 10 minutes
+                return audio_url
+    except Exception:
+        return None  # Return None if yt-dlp fails
+
+    return None
+
+def get_audio_url(request):
+    """Django view that retrieves the audio URL for a given YouTube video ID."""
+    
+    video_id = request.GET.get('video_id', '').strip()  # Extract video ID from query params
+
+    if not video_id:
+        return JsonResponse({'error': 'Video ID parameter is missing'}, status=400)
+
+    # Fetch audio URL
+    audio_url = fetch_audio_url(video_id)
+
+    if audio_url:
+        return JsonResponse({'audio_url': audio_url})
+
+    return JsonResponse({'error': 'Could not fetch audio URL'}, status=500)
 
 
 def get_playlist_info(channel_name):

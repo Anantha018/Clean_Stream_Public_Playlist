@@ -69,7 +69,8 @@ document.addEventListener('DOMContentLoaded', function () {
             currentAudio.pause();
             currentAudio = null;
         }
-        fetch(`/audio/${audioUrl.split('/').pop()}`)
+        //  Request Audio from Django API Instead of YouTube
+        fetch(`/audio/?video_id=${audioUrl.split('/').pop()}`)
             .then(response => response.json())
             .then(data => {
                 if (data.audio_url) {
