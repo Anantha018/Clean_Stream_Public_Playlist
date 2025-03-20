@@ -52,30 +52,27 @@ def playlist(request, playlist_id):  # Accept playlist_id as a parameter
 CLOUDFLARE_WORKER_URL = "https://ytproxyaudio.sridharindie.workers.dev/?video_id="
 
 def fetch_audio_url(video_id):
-    """Fetches the audio URL from YouTube using yt-dlp."""
-    
-    if cache.get(video_id):  # Check if URL is already cached
+    """Fetches the audio URL from YouTube using yt-dlp with authentication cookies."""
+
+    if cache.get(video_id):
         return cache.get(video_id)
 
-    # 🔹 Step 1: Fetch Video Details from Cloudflare Worker
-    try:
-        response = requests.get(CLOUDFLARE_WORKER_URL + video_id)
-        if response.status_code != 200:
-            return None
-        
-        video_info = response.json()
-        if "video_info" not in video_info:
-            return None
-    except Exception as e:
-        return None  # Return None if Cloudflare request fails
-
-    # 🔹 Step 2: Extract Audio URL Using yt-dlp
     ydl_opts = {
-        'format': 'bestaudio[ext=m4a]/bestaudio',
+        'format': 'bestaudio[ext=m4a]/best/m4a/mp3',
         'quiet': True,
         'noplaylist': True,
+        'extract_flat': False,
+        'no_warnings': True,
         'retries': 2,
         'skip_download': True,
+        'preferredquality': '128k',
+        'cookies': 'cookies.txt',  # 🔥 Use cookies for authentication
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
+            'Referer': 'https://www.youtube.com/',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+        }
     }
 
     try:
@@ -83,12 +80,14 @@ def fetch_audio_url(video_id):
             info = ydl.extract_info(f'https://www.youtube.com/watch?v={video_id}', download=False)
             audio_url = info.get('url')
             if audio_url:
-                cache.set(video_id, audio_url, timeout=600)  # Cache for 10 minutes
+                cache.set(video_id, audio_url, timeout=600)  # Cache URL for 10 minutes
                 return audio_url
-    except Exception:
-        return None  # Return None if yt-dlp fails
+    except Exception as e:
+        print(f"yt-dlp Error: {e}")  # Log the error
+        return None
 
     return None
+
 
 def get_audio_url(request):
     """Django view that retrieves the audio URL for a given YouTube video ID."""
