@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from yt_dlp import YoutubeDL
+from pytubefix import YouTube 
 from django.views.decorators.csrf import csrf_exempt
 from django.core.cache import cache
 
@@ -49,61 +50,45 @@ def playlist(request, playlist_id):  # Accept playlist_id as a parameter
         return render(request, 'home.html', {'error': f"An error occurred: {e}"})
 
 
-CLOUDFLARE_WORKER_URL = "https://ytproxyaudio.sridharindie.workers.dev/?video_id="
-
-def fetch_audio_url(video_id):
-    """Fetches the audio URL from YouTube using yt-dlp with authentication cookies."""
-
-    if cache.get(video_id):
-        return cache.get(video_id)
-
-    ydl_opts = {
-        'format': 'bestaudio[ext=m4a]/best/m4a/mp3',
-        'quiet': True,
-        'noplaylist': True,
-        'extract_flat': False,
-        'no_warnings': True,
-        'retries': 2,
-        'skip_download': True,
-        'preferredquality': '128k',
-        'cookies': 'cookies.txt',  # 🔥 Use cookies for authentication
-        'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
-            'Referer': 'https://www.youtube.com/',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
-        }
-    }
+# Fetch audio stream URL using Pytube
+def fetch_audio_url(url):
+    if cache.get(url):
+        return cache.get(url)
 
     try:
-        with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(f'https://www.youtube.com/watch?v={video_id}', download=False)
-            audio_url = info.get('url')
-            if audio_url:
-                cache.set(video_id, audio_url, timeout=600)  # Cache URL for 10 minutes
-                return audio_url
+        yt = YouTube(url)
+        # Filter audio-only streams, prefer m4a
+        stream = yt.streams.filter(only_audio=True, subtype='m4a').order_by('abr').desc().first()
+        if not stream:
+            stream = yt.streams.filter(only_audio=True).order_by('abr').desc().first()
+        
+        if stream and stream.url:
+            audio_url = stream.url
+            cache.set(url, audio_url, timeout=600)
+            return audio_url
     except Exception as e:
-        print(f"yt-dlp Error: {e}")  # Log the error
         return None
 
     return None
 
-
 def get_audio_url(request):
-    """Django view that retrieves the audio URL for a given YouTube video ID."""
-    
-    video_id = request.GET.get('video_id', '').strip()  # Extract video ID from query params
+    """Handles the audio URL request."""
+    url = request.GET.get('url', '').strip()
 
-    if not video_id:
-        return JsonResponse({'error': 'Video ID parameter is missing'}, status=400)
+    # Ensure a valid YouTube link
+    if not url.startswith("https://www.youtube.com/watch"):
+        return JsonResponse({'error': 'Invalid YouTube URL'}, status=400)
 
-    # Fetch audio URL
-    audio_url = fetch_audio_url(video_id)
+    cached_audio_url = cache.get(url)
+    if cached_audio_url:
+        return JsonResponse({'audio_url': cached_audio_url})
 
+    audio_url = fetch_audio_url(url)
     if audio_url:
         return JsonResponse({'audio_url': audio_url})
 
     return JsonResponse({'error': 'Could not fetch audio URL'}, status=500)
+
 
 
 def get_playlist_info(channel_name):
