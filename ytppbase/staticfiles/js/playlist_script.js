@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+    // List of custom cookies you want to clear
+    const cookiesToClear = ['recentSearch', 'playlistView', 'userTheme', 'lastQueue'];
+
+    cookiesToClear.forEach(cookie => {
+        document.cookie = `${cookie}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    });
+
     const searchInput = document.getElementById('searchInput');
     let currentAudio = null;
     let loopSameSong = false; // Flag to control looping of the same song
