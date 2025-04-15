@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <button class="prev-btn"><i class="fas fa-step-backward"></i></button>
                         <button class="play-btn"><i class="fas fa-pause"></i></button>
                         <button class="next-btn"><i class="fas fa-step-forward"></i></button>
-                        <button class="loop-btn" id="loop-toggle-btn"><i class="fas fa-redo-alt"></i></button>
+                        <button class="loop-btn" id="loop-toggle-btn"><i class="fa-solid fa-repeat"></i></button>
                     </div>
                 `;
 
