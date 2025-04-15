@@ -19,7 +19,7 @@ DEBUG = False
 
 # Security and allowed hosts
 DEBUG = False
-ALLOWED_HOSTS = ['clean-stream-public-playlist.up.railway.app', 'playlist.cleanstream.site']
+ALLOWED_HOSTS = ['*','clean-stream-public-playlist.up.railway.app', 'playlist.cleanstream.site']
 
 # CORS settings
 CORS_ALLOW_CREDENTIALS = True
@@ -27,10 +27,14 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = [
     'https://clean-stream-public-playlist.up.railway.app',
     'https://playlist.cleanstream.site',
+    'http://127.0.0.1',
+    'http://127.0.0.1:8000',
 ]
 CSRF_TRUSTED_ORIGINS = [
     'https://clean-stream-public-playlist.up.railway.app',
     'https://playlist.cleanstream.site',
+    'http://127.0.0.1',
+    'http://127.0.0.1:8000',
 ]
 
 # CSRF cookie security

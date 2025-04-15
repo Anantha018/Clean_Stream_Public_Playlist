@@ -51,7 +51,8 @@ def playlist(request, playlist_id):  # Accept playlist_id as a parameter
 
 
 # Fetch audio stream URL using Pytube
-def fetch_audio_url(url):
+def fetch_audio_url_with_pytube(url):
+    
     if cache.get(url):
         return cache.get(url)
 
@@ -71,19 +72,43 @@ def fetch_audio_url(url):
 
     return None
 
+def fetch_audio_with_ytdlp(video_id):
+    if cache.get(video_id):
+        return cache.get(video_id)
+    try:
+        ydl_opts = {
+            'format': 'bestaudio[ext=m4a]/bestaudio[ext=webm]/bestaudio',
+            'quiet': True,
+            'noplaylist': True,
+            'extract_flat': False,  # Needs to be False to extract stream info
+            'no_warnings': True,
+            'retries': 1,
+            'skip_download': True,
+        }
+        with YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(video_id, download=False)
+            cache.set(video_id, info.get('url'), timeout=600)
+            return info.get('url')
+    except Exception as e:
+        return None
+
+
 def get_audio_url(request):
-    """Handles the audio URL request."""
-    url = request.GET.get('url', '').strip()
+    """Handles the audio URL request"""
+    url = request.GET.get('video_id', '').strip()
 
-    # Ensure a valid YouTube link
-    if not url.startswith("https://www.youtube.com/watch"):
-        return JsonResponse({'error': 'Invalid YouTube URL'}, status=400)
-
+    full_yt_url = f'https://www.youtube.com/watch?v={url}'
+     
     cached_audio_url = cache.get(url)
     if cached_audio_url:
         return JsonResponse({'audio_url': cached_audio_url})
 
-    audio_url = fetch_audio_url(url)
+    audio_url = fetch_audio_url_with_pytube(full_yt_url)
+    
+    # If PyTube fails, try yt-dlp fallback
+    if not audio_url:
+        audio_url = fetch_audio_with_ytdlp(url)
+        
     if audio_url:
         return JsonResponse({'audio_url': audio_url})
 
